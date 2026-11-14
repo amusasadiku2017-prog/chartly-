@@ -1,0 +1,282 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #080d13;
+    color: white;
+}
+
+:root {
+    --green: #00e6a0;
+    --card: #111c27;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.welcome, .auth {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+    text-align: center;
+}
+
+.logo {
+    width: 85px;
+    height: 85px;
+    border-radius: 25px;
+    background: var(--green);
+    color: #07130f;
+    display: grid;
+    place-items: center;
+    font-size: 38px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    box-shadow: 0 0 35px #00e6a055;
+}
+
+.logo span {
+    color: white;
+}
+
+.welcome h1 {
+    font-size: 38px;
+    letter-spacing: 5px;
+}
+
+.welcome p, .auth p {
+    color: #9aabb8;
+    margin: 12px 0 30px;
+}
+
+button {
+    background: var(--green);
+    border: none;
+    color: #06120e;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 12px;
+}
+
+button:active {
+    transform: scale(.97);
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 15px;
+    margin: 9px 0;
+    background: #14212d;
+    color: white;
+    border: 1px solid #263b48;
+    border-radius: 12px;
+    outline: none;
+}
+
+textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: #0c151f;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+header h2 {
+    letter-spacing: 3px;
+}
+
+header h2 span {
+    color: var(--green);
+}
+
+header small {
+    color: #9aabb8;
+}
+
+.avatar {
+    background: var(--green);
+    color: #06120e;
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    font-weight: bold;
+}
+
+main {
+    padding: 18px;
+    padding-bottom: 100px;
+    max-width: 650px;
+    margin: auto;
+}
+
+.page {
+    display: none;
+    animation: appear .3s ease;
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.welcome-card {
+    padding: 25px;
+    background: linear-gradient(135deg, #063d35, #102a38);
+    border-radius: 20px;
+    margin-bottom: 25px;
+    border: 1px solid #176c58;
+}
+
+.welcome-card small {
+    color: var(--green);
+}
+
+.welcome-card h1 {
+    margin: 15px 0;
+    font-size: 30px;
+}
+
+h2 {
+    margin: 15px 0;
+}
+
+h3 {
+    margin: 15px 0;
+}
+
+p {
+    color: #9aabb8;
+    line-height: 1.6;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 13px;
+    margin-top: 15px;
+}
+
+.feature {
+    background: var(--card);
+    padding: 18px;
+    border-radius: 16px;
+    border: 1px solid #203342;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: .2s;
+}
+
+.feature:active {
+    border-color: var(--green);
+}
+
+.feature b {
+    font-size: 27px;
+}
+
+.feature h3 {
+    font-size: 16px;
+}
+
+.feature p {
+    font-size: 12px;
+}
+
+.result, .calm-card {
+    background: #102b27;
+    border: 1px solid #176c58;
+    padding: 20px;
+    border-radius: 15px;
+    margin: 20px 0;
+    line-height: 1.7;
+}
+
+.feelings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.feelings button {
+    margin: 0;
+}
+
+.profile-avatar {
+    background: var(--green);
+    color: black;
+    font-size: 40px;
+    font-weight: bold;
+    width: 90px;
+    height: 90px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    margin: 25px auto;
+}
+
+#profile {
+    text-align: center;
+}
+
+nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    background: #101a25;
+    padding: 10px 3px;
+    border-top: 1px solid #243441;
+    z-index: 20;
+}
+
+nav button {
+    background: transparent;
+    color: white;
+    font-size: 21px;
+    margin: 0;
+    padding: 5px;
+}
+
+nav small {
+    display: block;
+    font-size: 10px;
+    color: #a6b7c2;
+}
+
+@media(max-width: 350px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
