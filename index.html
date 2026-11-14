@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHATTLY</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="welcome" class="welcome">
+    <div class="logo">C<span>H</span></div>
+    <h1>CHATTLY</h1>
+    <p>Connect. Create. Communicate.</p>
+    <button onclick="showAuth()">Get Started</button>
+</div>
+
+<div id="auth" class="auth hidden">
+    <div class="logo">C<span>H</span></div>
+    <h2>Welcome to Chattly</h2>
+    <p>Your world. Your conversations.</p>
+
+    <input id="username" placeholder="Your name">
+    <input id="email" placeholder="Email address">
+    <input id="password" type="password" placeholder="Password">
+
+    <button onclick="login()">Continue</button>
+    <p class="small">Your communication starts here.</p>
+</div>
+
+<div id="app" class="hidden">
+
+<header>
+    <div>
+        <h2>CHATTLY<span>.</span></h2>
+        <small id="greeting">Your world, connected.</small>
+    </div>
+    <div class="avatar" onclick="navigate('profile')">C</div>
+</header>
+
+<main>
+
+<section id="home" class="page active">
+
+    <div class="welcome-card">
+        <small>YOUR DIGITAL WORLD</small>
+        <h1 id="homeName">Hello!</h1>
+        <p>What would you like to do today?</p>
+    </div>
+
+    <h3>Explore Chattly</h3>
+
+    <div class="grid">
+
+        <div class="feature" onclick="navigate('chats')">
+            <b>💬</b>
+            <h3>Messages</h3>
+            <p>Your conversations</p>
+        </div>
+
+        <div class="feature" onclick="navigate('ideas')">
+            <b>🧠</b>
+            <h3>Idea Lab</h3>
+            <p>Discover new ideas</p>
+        </div>
+
+        <div class="feature" onclick="navigate('calm')">
+            <b>💚</b>
+            <h3>Calm Corner</h3>
+            <p>A moment for yourself</p>
+        </div>
+
+        <div class="feature" onclick="navigate('contacts')">
+            <b>📱</b>
+            <h3>Contacts</h3>
+            <p>Your saved people</p>
+        </div>
+
+        <div class="feature" onclick="navigate('community')">
+            <b>🌍</b>
+            <h3>Communities</h3>
+            <p>Find your people</p>
+        </div>
+
+        <div class="feature" onclick="navigate('space')">
+            <b>✨</b>
+            <h3>My Space</h3>
+            <p>Your personal corner</p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<section id="chats" class="page">
+    <h2>Messages</h2>
+    <p>Your conversations will appear here.</p>
+
+    <div id="chatList"></div>
+
+    <button onclick="newContact()">+ Start a conversation</button>
+</section>
+
+
+<section id="contacts" class="page">
+    <h2>My Contacts</h2>
+
+    <input id="contactName" placeholder="Contact name">
+    <input id="contactNumber" placeholder="Phone number">
+
+    <button onclick="addContact()">Save Contact</button>
+
+    <div id="contactList"></div>
+</section>
+
+
+<section id="ideas" class="page">
+    <h2>🧠 IDEA LAB</h2>
+    <p>Turn your imagination into possibilities.</p>
+
+    <select id="ideaType">
+        <option>Business ideas</option>
+        <option>School projects</option>
+        <option>Creative content</option>
+        <option>Technology ideas</option>
+        <option>Life improvement</option>
+    </select>
+
+    <button onclick="generateIdea()">Generate Idea</button>
+
+    <div id="ideaResult" class="result">
+        Your next big idea starts here.
+    </div>
+</section>
+
+
+<section id="calm" class="page">
+    <h2>💚 CALM CORNER</h2>
+    <p>A quiet place to organise your thoughts.</p>
+
+    <div class="calm-card">
+        <h3>Take a moment.</h3>
+        <p>You don't have to figure everything out at once.
+        One small step is still progress.</p>
+    </div>
+
+    <h3>How are you feeling?</h3>
+
+    <div class="feelings">
+        <button onclick="feeling('Happy')">😊 Happy</button>
+        <button onclick="feeling('Sad')">😔 Sad</button>
+        <button onclick="feeling('Stressed')">😟 Stressed</button>
+        <button onclick="feeling('Confused')">🤔 Confused</button>
+    </div>
+
+    <div id="calmResponse" class="result">
+        You can talk about what's on your mind.
+    </div>
+
+    <textarea id="thoughts" placeholder="Write what's on your mind..."></textarea>
+    <button onclick="comfort()">Get some encouragement</button>
+</section>
+
+
+<section id="community" class="page">
+    <h2>🌍 Communities</h2>
+    <p>Spaces for people with shared interests.</p>
+
+    <div class="feature">
+        <h3>🎨 Creative Minds</h3>
+        <p>Art, design and imagination.</p>
+    </div>
+
+    <div class="feature">
+        <h3>💻 Tech World</h3>
+        <p>Technology and coding.</p>
+    </div>
+
+    <div class="feature">
+        <h3>📚 Learning Circle</h3>
+        <p>Learning and education.</p>
+    </div>
+</section>
+
+
+<section id="space" class="page">
+    <h2>✨ MY SPACE</h2>
+    <p>Your personal digital corner.</p>
+
+    <textarea id="journal" placeholder="Write your personal notes..."></textarea>
+
+    <button onclick="saveJournal()">Save Journal</button>
+
+    <h3>Saved Notes</h3>
+    <div id="savedNotes"></div>
+</section>
+
+
+<section id="profile" class="page">
+    <h2>My Profile</h2>
+
+    <div class="profile-avatar">C</div>
+
+    <h3 id="profileName">Chattly User</h3>
+    <p id="profileEmail"></p>
+
+    <button onclick="logout()">Log Out</button>
+</section>
+
+</main>
+
+
+<nav>
+    <button onclick="navigate('home')">⌂<small>Home</small></button>
+    <button onclick="navigate('chats')">▤<small>Chats</small></button>
+    <button onclick="navigate('ideas')">✧<small>Ideas</small></button>
+    <button onclick="navigate('calm')">♡<small>Calm</small></button>
+    <button onclick="navigate('space')">◉<small>Space</small></button>
+</nav>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
