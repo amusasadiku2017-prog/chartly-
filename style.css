@@ -1,353 +1,146 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+let currentMode = "General";
+
+function showPage(id, button) {
+    document.querySelectorAll(".page").forEach(p => {
+        p.classList.remove("active");
+    });
+
+    document.getElementById(id).classList.add("active");
+
+    document.querySelectorAll(".nav-item").forEach(b => {
+        b.classList.remove("active");
+    });
+
+    if (button) button.classList.add("active");
+
+    if (id === "contacts") renderContacts();
 }
 
-:root {
-    --bg: #07110e;
-    --panel: #111d18;
-    --green: #19d77b;
-    --text: #f3fff8;
-    --muted: #91a69a;
+function showNotice(message) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.style.display = "block";
+
+    setTimeout(() => {
+        toast.style.display = "none";
+    }, 2500);
 }
 
-body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: Arial, sans-serif;
-    min-height: 100vh;
-    padding-bottom: 100px;
+function saveContact() {
+    const name = document.getElementById("contactName").value.trim();
+    const phone = document.getElementById("contactPhone").value.trim();
+
+    if (!name || !phone) {
+        showNotice("Enter a name and phone number.");
+        return;
+    }
+
+    if (!/^\+?[0-9\s()-]{7,20}$/.test(phone)) {
+        showNotice("Enter a valid phone number.");
+        return;
+    }
+
+    let contacts = JSON.parse(
+        localStorage.getItem("chattlyContacts") || "[]"
+    );
+
+    if (contacts.some(c => c.phone === phone)) {
+        showNotice("This number is already saved.");
+        return;
+    }
+
+    contacts.push({name, phone});
+
+    localStorage.setItem(
+        "chattlyContacts",
+        JSON.stringify(contacts)
+    );
+
+    document.getElementById("contactName").value = "";
+    document.getElementById("contactPhone").value = "";
+
+    renderContacts();
+    showNotice("Contact saved on this device.");
 }
 
-.header {
-    height: 75px;
-    padding: 0 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background: var(--bg);
+function renderContacts() {
+    const list = document.getElementById("contactsList");
+
+    const contacts = JSON.parse(
+        localStorage.getItem("chattlyContacts") || "[]"
+    );
+
+    list.innerHTML = contacts.map(c => `
+        <div class="contact-row">
+            <strong>${escapeHTML(c.name)}</strong>
+            <p>${escapeHTML(c.phone)}</p>
+            <small>Saved locally · Not yet connected</small>
+        </div>
+    `).join("") || "<p class='subtitle'>No saved contacts yet.</p>";
 }
 
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[char]);
 }
 
-.brand h1 {
-    font-size: 23px;
-    letter-spacing: 2px;
+function filterChats(type, button) {
+    document.querySelectorAll(".filters button").forEach(b => {
+        b.classList.remove("selected");
+    });
+
+    button.classList.add("selected");
+
+    showNotice(type + " conversations");
 }
 
-.logo {
-    width: 39px;
-    height: 39px;
-    background: var(--green);
-    color: #06130c;
-    border-radius: 13px;
-    display: grid;
-    place-items: center;
-    font-weight: bold;
-    font-size: 25px;
+function searchChats() {
+    const value = document.getElementById("searchInput").value;
+    if (value.trim()) {
+        showNotice("Search will work with connected conversations.");
+    }
 }
 
-.header-actions {
-    display: flex;
-    gap: 15px;
+function selectMode(mode) {
+    currentMode = mode;
+    showNotice(mode + " mode selected");
 }
 
-button {
-    cursor: pointer;
-    border: none;
-    color: inherit;
-    background: transparent;
+function sendAI() {
+    const input = document.getElementById("aiInput");
+    const message = input.value.trim();
+
+    if (!message) return;
+
+    const area = document.getElementById("aiMessages");
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble user-bubble";
+    bubble.textContent = message;
+
+    area.appendChild(bubble);
+
+    const response = document.createElement("div");
+    response.className = "bubble ai-bubble";
+    response.textContent =
+        "CHATTLY AI demo: " +
+        currentMode +
+        " mode is selected. Connect the secure AI backend to receive intelligent responses.";
+
+    area.appendChild(response);
+
+    input.value = "";
+    area.scrollTop = area.scrollHeight;
 }
 
-.header-actions button {
-    font-size: 24px;
-}
-
-main {
-    padding: 15px;
-}
-
-.page {
-    display: none;
-}
-
-.page.active {
-    display: block;
-}
-
-h2 {
-    font-size: 26px;
-    margin: 15px 0;
-}
-
-.subtitle {
-    color: var(--muted);
-    margin-bottom: 25px;
-}
-
-.search {
-    background: #19241f;
-    border-radius: 18px;
-    display: flex;
-    padding: 16px;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 22px;
-}
-
-.search span {
-    font-size: 25px;
-    color: var(--green);
-}
-
-input {
-    background: transparent;
-    border: none;
-    outline: none;
-    color: white;
-    font-size: 15px;
-    width: 100%;
-}
-
-.filters {
-    display: flex;
-    gap: 9px;
-    overflow-x: auto;
-    padding-bottom: 18px;
-}
-
-.filters button {
-    border: 1px solid #293a32;
-    border-radius: 25px;
-    padding: 10px 17px;
-    white-space: nowrap;
-}
-
-.filters .selected {
-    background: #123d2b;
-    border-color: var(--green);
-    color: var(--green);
-}
-
-.section-title {
-    color: var(--muted);
-    font-size: 11px;
-    letter-spacing: 2px;
-    margin: 20px 0;
-}
-
-.empty {
-    text-align: center;
-    padding: 65px 15px;
-    color: var(--muted);
-}
-
-.empty-icon {
-    font-size: 55px;
-    color: var(--green);
-    margin-bottom: 20px;
-}
-
-.empty h3 {
-    color: white;
-    margin-bottom: 10px;
-}
-
-.floating {
-    position: fixed;
-    right: 22px;
-    bottom: 105px;
-    width: 60px;
-    height: 60px;
-    background: var(--green);
-    color: #07110e;
-    border-radius: 20px;
-    font-size: 32px;
-    box-shadow: 0 5px 25px #19d77b40;
-}
-
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: #0b1712;
-    border-top: 1px solid #20342a;
-    display: flex;
-    justify-content: space-around;
-    padding: 12px 3px 18px;
-    z-index: 20;
-}
-
-.nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 7px;
-    color: var(--muted);
-    font-size: 10px;
-}
-
-.nav-item span {
-    font-size: 23px;
-}
-
-.nav-item.active {
-    color: var(--green);
-}
-
-.feature-card {
-    background: var(--panel);
-    border: 1px solid #23392d;
-    border-radius: 18px;
-    padding: 20px;
-    margin: 15px 0;
-}
-
-.feature-card h3 {
-    margin-bottom: 12px;
-}
-
-.feature-card p {
-    color: var(--muted);
-    line-height: 1.6;
-    margin-bottom: 15px;
-}
-
-.feature-card button {
-    background: var(--green);
-    color: #07110e;
-    padding: 12px 18px;
-    border-radius: 12px;
-    font-weight: bold;
-}
-
-.feature-card input {
-    display: block;
-    background: #07110e;
-    border: 1px solid #344b3e;
-    padding: 14px;
-    border-radius: 10px;
-    margin: 12px 0;
-}
-
-.ai-heading {
-    text-align: center;
-    padding: 20px 0;
-}
-
-.ai-logo {
-    font-size: 50px;
-    color: var(--green);
-}
-
-.ai-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 20px 0;
-}
-
-.ai-options button {
-    background: #14251c;
-    padding: 12px;
-    border-radius: 15px;
-    color: var(--green);
-}
-
-.ai-messages {
-    min-height: 240px;
-    padding: 10px 0;
-}
-
-.bubble {
-    padding: 15px;
-    border-radius: 15px;
-    margin: 10px 0;
-    max-width: 90%;
-    line-height: 1.5;
-}
-
-.ai-bubble {
-    background: #17271e;
-}
-
-.user-bubble {
-    background: #075b37;
-    margin-left: auto;
-}
-
-.ai-input {
-    display: flex;
-    gap: 10px;
-    background: #18251e;
-    padding: 12px;
-    border-radius: 18px;
-}
-
-.ai-input button {
-    background: var(--green);
-    color: black;
-    width: 42px;
-    height: 42px;
-    border-radius: 13px;
-}
-
-.security-note {
-    color: var(--muted);
-    font-size: 11px;
-    line-height: 1.6;
-    margin: 18px 0;
-}
-
-.profile-card {
-    background: var(--panel);
-    border-radius: 20px;
-    text-align: center;
-    padding: 35px;
-}
-
-.avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: #145b39;
-    display: grid;
-    place-items: center;
-    color: var(--green);
-}
-
-.avatar.big {
-    width: 85px;
-    height: 85px;
-    font-size: 35px;
-    margin: auto auto 15px;
-}
-
-#toast {
-    position: fixed;
-    bottom: 100px;
-    left: 10%;
-    width: 80%;
-    background: #20372a;
-    padding: 15px;
-    text-align: center;
-    border-radius: 12px;
-    display: none;
-    z-index: 50;
-}
-
-.contact-row {
-    background: var(--panel);
-    padding: 16px;
-    margin: 10px 0;
-    border-radius: 14px;
-}
+document.getElementById("aiInput").addEventListener(
+    "keydown",
+    event => {
+        if (event.key === "Enter") sendAI();
+    }
+);
